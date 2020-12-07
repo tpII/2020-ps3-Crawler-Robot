@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/santiago/Desktop/crawlerbot-master/basededatos.db'
 db = SQLAlchemy(app)
 
+#Se crea base de datos con SQLAlchemy, donde s0 corresponde al valor de un servomoto y s1 el valor del otro servomotor  
 
 class Epoca(db.Model):
     __tablename__ = 'epoca'
@@ -26,6 +27,8 @@ class Epoca(db.Model):
     @staticmethod
     def get_by_id(id):
         return User.query.get(id)
+
+#id es el identificador de la tabla y Q es la matriz Q almacenada en formato pickle 
 
 class MatrizQ(db.Model):
     __tablename__ = 'matrizQ'

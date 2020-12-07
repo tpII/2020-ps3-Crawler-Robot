@@ -67,6 +67,9 @@ R = np.zeros((ROW_NUM, COL_NUM, ACT_NUM))
 Q_Agent = Q_Agent_Class.Q_Agent_Class()
 crawlerDone = False
 
+
+# Realiza la accion caminar utilizando la ultima matriz Q aprendida, extraida desde la base de datos. Ahora Epsilon es 1 el cual hace que el algoritmo vaya por el camino mas optimo, y no por un camino aleatorio.
+# ACLARACION: este codigo no modifica la matriz Q ya que no recompensa.
 def Caminar():
 	global Q_runFlag
 	global Q_go
@@ -81,28 +84,28 @@ def Caminar():
 	Q_Agent.S1=0
 	while Q_go:
 		if Q_runFlag:
-			if Q_Agent.S0 == 0 and Q_Agent.S1 == 3:
+			if Q_Agent.S0 == 0 and Q_Agent.S1 == 3:  # si llega a esa posicion de la matriz, vuelve a la posicion inicial
 				Q_Agent.S0=0
 				Q_Agent.S1=0
 			else:
 
 				print 'iteration: ',iteration
-				Q_Agent.Policy(epsilon, ACT_NUM, Q)
-				Action = Q_Agent.Take_Action(ROW_NUM, COL_NUM, ACT_NUM)
+				Q_Agent.Policy(epsilon, ACT_NUM, Q) # Policy determina si va por un camino aleatorio para aprender o si va por el camino optimo, en este caso va por el optimo.
+				Action = Q_Agent.Take_Action(ROW_NUM, COL_NUM, ACT_NUM) # determina a donde se va a mover
 				print 'Action:%s  from: %s%s   to: %s%s' %(Action, Q_Agent.S0, Q_Agent.S1, Q_Agent.S0_prime, Q_Agent.S1_prime) 
 				if Action == 'out of bounds':
 					print Action
 				
-				Q_Agent.Q_Update_Caminar(Q, alpha, gamma)
+				Q_Agent.Q_Update_Caminar(Q, alpha, gamma) # actualiza la posicion de la matriz
 				iteration=iteration+1
 			
 				if Q_Agent.S1 == 3:
 					Q_Agent.S0=0
 					Q_Agent.S1=0	
-				if GUI_enabled:
+				if GUI_enabled: # pregunta si se activo el flag de la interfaz grafica
 
-					DrawQ()
-					for event in pygame.event.get():
+					DrawQ() # dibuja la matriz
+					for event in pygame.event.get():  # este for hace que termine la ejecucion del codigo y no queden hilos en ejecucion
 						if event.type == pygame.QUIT:
 							pygame.quit()
 							Q_go = False
